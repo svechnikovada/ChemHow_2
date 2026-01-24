@@ -4,34 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chem-How</title>
-
-    <!-- Иконки -->
+  <!-- Иконки -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
-
-    <style>
+  <style>
         /* CSS Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
+            box-sizing: border-box;}
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f0f4f8;
             color: #333;
         }
-
-        .container {
+      .container {
             display: flex;
-            min-height: 100vh;
-        }
+            min-height: 100vh;}
 
         /* Sidebar Menu Styles */
         .sidebar {
             width: 280px;
-
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+ background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
             color: white;
             padding: 20px 0;
             position: fixed;
@@ -43,110 +36,84 @@
             z-index: 1000;
             box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1); /* Легкая тень для глубины */
         }
-
-        .sidebar.active {
+      .sidebar.active {
             transform: translateX(0);
         }
-
-        .sidebar-header {
+    .sidebar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Чуть заметнее разделитель */
         }
-
-        .logo {
+.logo {
             display: flex;
             align-items: center;
             gap: 12px; /* Чуть больше отступ */
             font-size: 1.3rem; /* Чуть крупнее */
-            font-weight: 600; /* Полужирный, не чисто bold */
-        }
-
-        .logo i {
-            font-size: 1.6rem;
-            color: #3b82f6; /* Новый акцентный цвет */
-        }
-
-        .close-menu-btn {
+            font-weight: 600; /* Полужирный, не чисто bold */}
+.logo i {font-size: 1.6rem;
+            color: #3b82f6; /* Новый акцентный цвет */}
+.close-menu-btn {
             background: none;
             border: none;
             color: white;
             font-size: 1.4rem; /* Чуть крупнее */
             cursor: pointer;
             padding: 5px;
-            opacity: 0.8;
-        }
+            opacity: 0.8;}
          .close-menu-btn:hover {
-            opacity: 1;
-        }
-
-        .nav-menu {
+            opacity: 1;}
+.nav-menu {
             list-style: none;
             padding: 20px 0;
         }
-
-        .nav-item {
+.nav-item {
             padding: 15px 25px;
             cursor: pointer;
             transition: background-color 0.3s, border-left-color 0.3s;
             border-left: 4px solid transparent;
         }
-
-        .nav-item:hover, .nav-item.active {
+.nav-item:hover, .nav-item.active {
             background: rgba(255, 255, 255, 0.15);
             border-left-color: #3b82f6; /* Новый акцентный цвет */
         }
-
-        .nav-item a {
+ .nav-item a {
             color: white;
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        .nav-item i {
+            gap: 15px;}
+    .nav-item i {
             width: 20px;
-            text-align: center;
-        }
-
-        .nav-divider {
+            text-align: center;}
+ .nav-divider {
             height: 1px;
             background: rgba(255, 255, 255, 0.1);
             margin: 15px 25px;
         }
-
-        /* Main Content Area */
+/* Main Content Area */
         .main-content {
             flex: 1;
             padding: 30px; /* Увеличен padding */
             transition: margin-left 0.4s ease;
         }
 
-
-        .sidebar.active + .main-content {
+.sidebar.active + .main-content {
             margin-left: 280px;
         }
-
-
-         .main-content {
+.main-content {
             margin-left: 0;
          }
-
-
-        .top-bar {
+.top-bar {
             background: white;
             padding: 15px 25px; /* Увеличен padding */
             border-radius: 10px;
             margin-bottom: 30px; /* Увеличен отступ */
             box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Более мягкая тень */
             display: flex;
-            align-items: center;
-        }
-
-        .menu-toggle {
+            align-items: center;}
+.menu-toggle {
             background: #3b82f6;
             color: white;
             border: none;
@@ -161,41 +128,32 @@
          .menu-toggle i {
             font-size: 1.1rem;
          }
-
-
-        .content-section {
+.content-section {
             background: white;
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             min-height: 500px;
         }
-
-        .content-section h2 {
+.content-section h2 {
             color: #1e3a8a;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #f0f0f0;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .content-section p {
+            gap: 10px; }
+.content-section p {
             line-height: 1.6;
             margin-bottom: 15px;
         }
-
-
-         .content-section ul li {
+.content-section ul li {
             background-color: #f9f9f9;
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 10px !important;
          }
-
-
-        @media (max-width: 768px) {
+@media (max-width: 768px) {
             .sidebar.active + .main-content {
                 margin-left: 0;
             }
@@ -331,3 +289,5 @@
     </script>
 </body>
 </html>
+
+
