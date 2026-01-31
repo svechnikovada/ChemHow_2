@@ -4,27 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chem-How</title>
-  <!-- Иконки -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
-  <style>
-     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;}
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f0f4f8;
             color: #333;
         }
-      .container {
+        .container {
             display: flex;
-            min-height: 100vh;}
-
-        /* Sidebar Menu Styles */
+            min-height: 100vh;
+        }
         .sidebar {
             width: 280px;
- background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
             color: white;
             padding: 20px 0;
             position: fixed;
@@ -32,88 +30,92 @@
             left: 0;
             top: 0;
             transform: translateX(-100%);
-            transition: transform 0.4s ease; /* Чуть более плавная анимация */
+            transition: transform 0.4s ease;
             z-index: 1000;
-            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1); /* Легкая тень для глубины */
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
         }
-      .sidebar.active {
+        .sidebar.active {
             transform: translateX(0);
         }
-    .sidebar-header {
+        .sidebar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Чуть заметнее разделитель */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
-.logo {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 12px; /* Чуть больше отступ */
-            font-size: 1.3rem; /* Чуть крупнее */
-            font-weight: 600; /* Полужирный, не чисто bold */}
-.logo i {font-size: 1.6rem;
-            color: #3b82f6; /* Новый акцентный цвет */}
-.close-menu-btn {
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .logo i {
+            font-size: 1.6rem;
+            color: #3b82f6;
+        }
+        .close-menu-btn {
             background: none;
             border: none;
             color: white;
-            font-size: 1.4rem; /* Чуть крупнее */
+            font-size: 1.4rem;
             cursor: pointer;
             padding: 5px;
-            opacity: 0.8;}
-         .close-menu-btn:hover {
-            opacity: 1;}
-.nav-menu {
+            opacity: 0.8;
+        }
+        .close-menu-btn:hover {
+            opacity: 1;
+        }
+        .nav-menu {
             list-style: none;
             padding: 20px 0;
         }
-.nav-item {
+        .nav-item {
             padding: 15px 25px;
             cursor: pointer;
             transition: background-color 0.3s, border-left-color 0.3s;
             border-left: 4px solid transparent;
         }
-.nav-item:hover, .nav-item.active {
+        .nav-item:hover, .nav-item.active {
             background: rgba(255, 255, 255, 0.15);
-            border-left-color: #3b82f6; /* Новый акцентный цвет */
+            border-left-color: #3b82f6;
         }
- .nav-item a {
+        .nav-item a {
             color: white;
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 15px;}
-    .nav-item i {
+            gap: 15px;
+        }
+        .nav-item i {
             width: 20px;
-            text-align: center;}
- .nav-divider {
+            text-align: center;
+        }
+        .nav-divider {
             height: 1px;
             background: rgba(255, 255, 255, 0.1);
             margin: 15px 25px;
         }
-/* Main Content Area */
         .main-content {
             flex: 1;
-            padding: 30px; /* Увеличен padding */
+            padding: 30px;
             transition: margin-left 0.4s ease;
+            margin-left: 0;
         }
-
-.sidebar.active + .main-content {
+        .sidebar.active + .main-content {
             margin-left: 280px;
         }
-.main-content {
-            margin-left: 0;
-         }
-.top-bar {
+        .top-bar {
             background: white;
-            padding: 15px 25px; /* Увеличен padding */
+            padding: 15px 25px;
             border-radius: 10px;
-            margin-bottom: 30px; /* Увеличен отступ */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Более мягкая тень */
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             display: flex;
-            align-items: center;}
-.menu-toggle {
+            align-items: center;
+        }
+        .menu-toggle {
             background: #3b82f6;
             color: white;
             border: none;
@@ -125,44 +127,69 @@
             align-items: center;
             gap: 8px;
         }
-         .menu-toggle i {
-            font-size: 1.1rem;
-         }
-.content-section {
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px;
             background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            min-height: 500px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-.content-section h2 {
+        .hero-section h1 {
             color: #1e3a8a;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 10px; }
-.content-section p {
-            line-height: 1.6;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
-.content-section ul li {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px !important;
-         }
-@media (max-width: 768px) {
+        .hero-section p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 4px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-bottom-color: #3b82f6;
+        }
+        .card i {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin-bottom: 12px;
+            color: #1e3a8a;
+        }
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #666;
+        }
+        @media (max-width: 768px) {
             .sidebar.active + .main-content {
                 margin-left: 0;
+            }
+            .hero-section h1 {
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Боковое меню -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
@@ -173,7 +200,6 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-
             <ul class="nav-menu">
                 <li class="nav-item active">
                     <a href="#">
@@ -181,30 +207,25 @@
                         <span>Главная</span>
                     </a>
                 </li>
-
                 <li class="nav-divider"></li>
-
                 <li class="nav-item">
                     <a href="#">
                         <i class="fas fa-table"></i>
                         <span>Интерактивная таблица</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="#">
                         <i class="fas fa-book"></i>
                         <span>Теоретический блок</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="#">
                         <i class="fas fa-tasks"></i>
                         <span>Задания для самопроверки</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="#">
                         <i class="fas fa-cube"></i>
@@ -214,7 +235,6 @@
             </ul>
         </aside>
 
-        <!-- Основной контент -->
         <main class="main-content" id="main-content">
             <div class="top-bar">
                 <button class="menu-toggle" id="menuToggle">
@@ -223,55 +243,59 @@
                 </button>
             </div>
 
-            <div class="content-section">
-                <h2><i class="fas fa-flask"></i> Добро пожаловать в Chem-How!</h2>
-                 <ul style="padding-left: 0; margin: 15px 0;">
-                    <li>
-                        <strong><i class="fas fa-table" style="color: #3b82f6;"></i> Интерактивная таблица</strong> - изучайте элементы и их свойства
-                    </li>
-                    <li>
-                        <strong><i class="fas fa-book" style="color: #3b82f6;"></i> Теоретический блок</strong> - основные понятия и формулы
-                    </li>
-                    <li>
-                        <strong><i class="fas fa-tasks" style="color: #3b82f6;"></i> Задания для самопроверки</strong> - практика и тесты
-                    </li>
-                    <li>
-                        <strong><i class="fas fa-cube" style="color: #3b82f6;"></i> 3D модели</strong> - визуализация молекул
-                    </li>
-                </ul>
+            <section class="hero-section">
+                <h1>Добро пожаловать в Chem-How</h1>
+                
+            </section>
+
+            <div class="grid-container">
+                <div class="card">
+                    <i class="fas fa-table"></i>
+                    <h3>Интерактивная таблица</h3>
+                    <p>Изучайте химические элементы, их атомные свойства и электронные конфигурации.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-book"></i>
+                    <h3>Теоретический блок</h3>
+                    <p>Доступный справочник по основным законам, формулам и реакциям химии.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Задания</h3>
+                    <p>Проверяйте свои знания с помощью тематических тестов и практических задач.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-cube"></i>
+                    <h3>3D Модели</h3>
+                    <p>Визуализируйте пространственное строение сложных молекул и кристаллических решеток.</p>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
             const menuToggle = document.getElementById('menuToggle');
             const closeMenu = document.getElementById('closeMenu');
             const navItems = document.querySelectorAll('.nav-item');
 
-
             if (window.innerWidth >= 768) {
                  sidebar.classList.add('active');
             }
-
 
             menuToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
             });
 
-
             closeMenu.addEventListener('click', function() {
                 sidebar.classList.remove('active');
             });
-
 
             navItems.forEach(item => {
                 item.addEventListener('click', function() {
                     navItems.forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
-
                     if (window.innerWidth < 768) {
                         sidebar.classList.remove('active');
                     }
@@ -289,6 +313,3 @@
     </script>
 </body>
 </html>
-
-
-
