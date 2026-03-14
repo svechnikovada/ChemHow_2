@@ -61,7 +61,7 @@
         .test-tube { width: 85px; height: 240px; border: 2px solid rgba(255,255,255,0.25); border-top: none; border-radius: 0 0 42px 42px; position: relative; overflow: hidden; background: rgba(255,255,255,0.05); }
         .liquid { position: absolute; bottom: 0; width: 100%; height: 0%; transition: all 0.7s ease; z-index: 1; }
         .precipitate { position: absolute; bottom: 0; width: 100%; height: 0%; transition: all 1.2s ease; opacity: 0; z-index: 2; }
-        
+
         .equation-box { margin-top: 20px; width: 100%; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6; display: none; }
         .eq-line { margin-bottom: 8px; font-family: 'Consolas', monospace; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
         .eq-label { color: #3b82f6; font-size: 0.6rem; text-transform: uppercase; font-weight: bold; display: block; }
@@ -95,7 +95,7 @@
     <main class="main-content">
         <div class="top-bar">
             <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i> Меню</button>
-            <h2 style="margin-left: 20px; color: #3b82f6; font-size: 1rem;"> CHEM PLATFORM</h2>
+            <h2 style="margin-left: 20px; color: #3b82f6; font-size: 1rem;"> CHEM HOW</h2>
         </div>
 
         <!-- ГЛАВНАЯ -->
@@ -132,7 +132,7 @@
         <div class="content-section" id="lab-section">
             <div class="lab-layout">
                 <div class="shelf">
-                    <div class="shelf-title">1. Основа (Катионы/Анионы)</div>
+                    <div class="shelf-title">1. Основа</div>
                     <div class="btn-grid">
                         <button class="lab-btn" onclick="setBase('rgba(255,255,255,0.1)', 'Cl', 'NaCl')">NaCl</button>
                         <button class="lab-btn" onclick="setBase('rgba(254,240,138,0.3)', 'I', 'KI')">KI</button>
@@ -177,15 +177,15 @@
 
         <!-- ТРЕНАЖЕР -->
         <div class="content-section" id="quiz-section">
-            <div id="score-display">Баллы ОГЭ: <span id="points">0</span></div>
+            <div id="score-display">Баллы: <span id="points">0</span></div>
             <div class="task-card">
-                <h4 style="color: #fbbf24; margin-bottom: 5px;">Задание №23:</h4>
+                <h4 style="color: #fbbf24; margin-bottom: 5px;">Задание:</h4>
                 <p id="task-text">Нажмите "Новое задание", чтобы начать.</p>
                 <button onclick="generateTask()" style="margin-top: 10px; background: #3b82f6; border: none; color: white; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Новое задание</button>
             </div>
             <div class="lab-layout">
                 <div class="shelf">
-                    <div class="shelf-title">Реактивы ОГЭ:</div>
+                    <div class="shelf-title">Реактивы:</div>
                     <div class="btn-grid">
                         <button class="lab-btn" onclick="setBase('rgba(255,255,255,0.1)', 'Cl', 'NaCl', 'quiz')">NaCl</button>
                         <button class="lab-btn" onclick="setBase('rgba(255,255,255,0.1)', 'CO3', 'Na2CO3', 'quiz')">Na2CO3</button>
@@ -246,7 +246,7 @@
         const pr = document.getElementById(mode + '-pre');
         const st = document.getElementById(mode + '-status');
 
-        // Логика Ultra Lab
+        // Логика
         if (reagent === 'Ag') {
             if (curAnion[mode] === 'Cl') updateV(mode, '#fff', 'AgCl↓ Белый осадок', "AgNO3 + NaCl = AgCl↓ + NaNO3", "Ag + NO3 + Na + Cl = AgCl↓ + Na + NO3", "Ag + Cl = AgCl↓");
             else if (curAnion[mode] === 'I') updateV(mode, '#fde047', 'AgI↓ Желтый осадок', "AgNO3 + KI = AgI↓ + KNO3", "Ag + NO3 + K + I = AgI↓ + K + NO3", "Ag + I = AgI↓");
@@ -257,7 +257,7 @@
         } else if (reagent === 'Ba' && curAnion[mode] === 'SO4') {
             updateV(mode, '#fff', 'BaSO4↓ Белый осадок', "BaCl2 + Na2SO4 = BaSO4↓ + 2NaCl", "Ba + 2Cl + 2Na + SO4 = BaSO4↓ + 2Na + 2Cl", "Ba + SO4 = BaSO4↓");
         } else if (reagent === 'HCl' && curAnion[mode] === 'CO3') {
-            document.getElementById(mode + '-gas').style.display='block'; createB(mode); 
+            document.getElementById(mode + '-gas').style.display='block'; createB(mode);
             updateV(mode, 'transparent', 'Газ CO2↑', "Na2CO3 + 2HCl = 2NaCl + CO2↑ + H2O", "2Na + CO3 + 2H + 2Cl = 2Na + 2Cl + CO2↑ + H2O", "CO3 + 2H = CO2↑ + H2O");
         } else if (reagent === 'Pb' && curAnion[mode] === 'S') {
             updateV(mode, '#000', 'PbS↓ Черный осадок', "Pb(NO3)2 + Na2S = PbS↓ + 2NaNO3", "Pb + 2NO3 + 2Na + S = PbS↓ + 2Na + 2NO3", "Pb + S = PbS↓");
@@ -309,15 +309,19 @@
         curAnion[m] = '';
     }
 
-    const tasks = [
-        { t: "Докажите наличие Cl- в NaCl", b: 'Cl', r: 'Ag' },
-        { t: "Получите голубой осадок меди", b: 'Cu', r: 'NaOH' },
-        { t: "Докажите наличие CO3 2- газом", b: 'CO3', r: 'HCl' }
-    ];
+   const tasks = [
+{ t: "Докажите наличие Cl- в NaCl", b: 'Cl', r: 'Ag' },
+{ t: "Получите голубой осадок меди", b: 'Cu', r: 'NaOH' },
+{ t: "Докажите наличие CO3 2- газом", b: 'CO3', r: 'HCl' },
+{ t: "Проведите качественную реакцию на хлорид-ионы", b: 'Cl', r: 'Ag' },
+{ t: "Получите нерастворимое основание из сульфата меди", b: 'Cu', r: 'NaOH' },
+{ t: "Докажите, что в пробирке находится карбонат натрия", b: 'CO3', r: 'HCl' },
+{ t: "Проведите реакцию, в ходе которой образуется «белый творожистый осадок»", b: 'Cl', r: 'Ag' },
+{ t: "Докажите наличие карбонат-ионов в растворе", b: 'CO3', r: 'HCl' },
+{ t: "Проведите реакцию ионного обмена с выделением газа", b: 'CO3', r: 'HCl' },
+{ t: "Получите осадок гидроксида меди (II)", b: 'Cu', r: 'NaOH' }
+];
     function generateTask() { resetLab('quiz'); activeTask = tasks[Math.floor(Math.random()*tasks.length)]; document.getElementById('task-text').innerText = activeTask.t; isFinished = false; }
 </script>
 </body>
 </html>
-
-
-
