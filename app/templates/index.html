@@ -322,4 +322,55 @@
 
     function updateProgress() {
         const prg = (currentQ / testData.length) * 100;
-        document.getElementById('p-
+        document.getElementById('p-bar').style.width = prg + '%';
+    }
+
+    function finishTest() {
+        document.getElementById('p-bar').style.width = '100%';
+        document.getElementById('question-container').innerHTML = `<h3>Тест завершен!</h3><p>Ваш результат: ${testScore} из ${testData.length}</p>`;
+        document.getElementById('next-q').style.display = 'none';
+        document.getElementById('test-status').innerHTML = '<button onclick="location.reload()" style="padding:10px; background:#3b82f6; color:white; border:none; border-radius:5px; cursor:pointer; margin-top:20px;">Вернуться на главную</button>';
+    }
+
+    // Сохраняем вашу старую химическую логику (setBase, addReagent, resetLab, generateTask и т.д.)
+    let curAnion = { lab: '', quiz: '' };
+    let score = 0, activeTask = null, isFinished = false;
+
+    function setBase(color, anion, name, mode = 'lab') {
+        if(mode === 'quiz' && isFinished) return;
+        resetLab(mode);
+        document.getElementById(mode + '-liq').style.height = '60%';
+        document.getElementById(mode + '-liq').style.background = color;
+        curAnion[mode] = anion;
+        document.getElementById(mode + '-status').innerText = 'Раствор ' + name;
+    }
+
+    function addReagent(reagent, mode) {
+        if (!curAnion[mode] || (mode === 'quiz' && isFinished)) return;
+        if (reagent === 'Ag' && curAnion[mode] === 'Cl') updateV(mode, '#fff', 'AgCl↓ Белый осадок');
+        if (reagent === 'NaOH' && curAnion[mode] === 'Cu') updateV(mode, '#0ea5e9', 'Cu(OH)2↓ Голубой');
+        if (reagent === 'HCl' && curAnion[mode] === 'CO3') { document.getElementById(mode + '-gas').style.display='block'; updateV(mode, 'transparent', 'Газ CO2↑'); }
+
+        if (mode === 'quiz' && activeTask && curAnion[mode] === activeTask.b && reagent === activeTask.r) {
+            score += 2; document.getElementById('points').innerText = score; isFinished = true;
+        }
+    }
+
+    function updateV(m, c, t) {
+        const pr = document.getElementById(m + '-pre');
+        if(c !== 'transparent') { pr.style.height = '25%'; pr.style.opacity = '1'; pr.style.background = c; }
+        document.getElementById(m + '-status').innerText = t;
+    }
+
+    function resetLab(m) {
+        document.getElementById(m + '-liq').style.height = '0';
+        if(document.getElementById(m + '-pre')) document.getElementById(m + '-pre').style.opacity = '0';
+        if(document.getElementById(m + '-gas')) document.getElementById(m + '-gas').style.display = 'none';
+        curAnion[m] = '';
+    }
+
+    const tasks = [{ t: "Докажите наличие Cl- в NaCl", b: 'Cl', r: 'Ag' }, { t: "Получите голубой осадок", b: 'Cu', r: 'NaOH' }];
+    function generateTask() { resetLab('quiz'); activeTask = tasks[Math.floor(Math.random()*tasks.length)]; document.getElementById('task-text').innerText = activeTask.t; isFinished = false; }
+</script>
+</body>
+</html>
