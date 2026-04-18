@@ -23,7 +23,7 @@
         .nav-item { padding: 15px 25px; cursor: pointer; background: transparent; }
         .nav-item a { color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 15px; }
 
-        /* Контент */
+        /* контент */
         .main-content { flex: 1; padding: 30px; margin-left: 0; }
         .top-bar { background: #444444; padding: 15px 25px; margin-bottom: 30px; display: flex; align-items: center; }
         .menu-toggle { background: #555555; color: #ffffff; border: none; padding: 10px 20px; cursor: pointer; }
@@ -31,26 +31,26 @@
         .content-section { display: none; background: #444444; padding: 40px; }
         .content-section.active { display: block; }
 
-        /* Сетка плиток */
+        /* плитки */
         .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .nav-box { background: #555555; padding: 30px 20px; text-align: center; cursor: pointer; }
         .nav-box i { font-size: 3rem; color: #ffffff; margin-bottom: 20px; }
         
         .fact-card { background: #3a3a3a; padding: 25px; margin-top: 30px; }
 
-        /* Квантовые ячейки */
+        /* кв ячейки */
         .quantum-box { display: flex; gap: 20px; margin: 15px 0; }
         .cell { width: 36px; height: 36px; border: 2px solid #ffffff; display: inline-flex; align-items: center; justify-content: center; position: relative; background: #ffffff; color: #000000; margin-right: 5px; font-weight: bold; }
         .spin-up { color: #ff4444; opacity: 0; }
         .spin-down { color: #4444ff; opacity: 0; }
         .visible { opacity: 1; }
 
-        /* Элементы таблицы */
+        /* таблица */
         .halogen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
         .element-card { background: #555555; border: 2px solid #ffffff; padding: 20px; text-align: center; cursor: pointer; }
         .element-card .symbol { font-size: 2.2rem; font-weight: 800; color: #ffffff; }
 
-        /* Лаборатория */
+        /* лаба */
         .lab-layout { display: grid; grid-template-columns: 1fr 450px; gap: 30px; }
         .shelf { background: #3a3a3a; padding: 20px; height: fit-content; }
         .shelf-title { font-size: 0.65rem; color: #cccccc; text-transform: uppercase; margin: 10px 0 5px; border-bottom: 1px solid #555555; padding-bottom: 2px; }
@@ -66,10 +66,10 @@
         .eq-line { margin-bottom: 8px; font-family: 'Consolas', monospace; font-size: 0.8rem; border-bottom: 1px solid #555555; padding-bottom: 3px; }
         .eq-label { color: #cccccc; font-size: 0.6rem; text-transform: uppercase; font-weight: bold; display: block; }
 
-        /* Solver */
+        /* солвер */
         .solver-input { width: 100%; padding: 15px; background: #333333; border: 2px solid #ffffff; color: #ffffff; font-family: monospace; margin-bottom: 15px; outline: none; }
 
-        /* Модалка таблицы растворимости */
+        /* таблица раств */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); }
         .modal-content { background: #444444; margin: 5% auto; padding: 20px; width: 90%; max-width: 850px; }
         .sol-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center; color: #ffffff; }
@@ -81,7 +81,7 @@
         @keyframes rise { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-180px); opacity: 0; } }
         .bubble { position: absolute; background: rgba(255,255,255,0.4); border-radius: 50%; animation: rise 1.5s infinite linear; }
         
-        /* Убираем все скругления и лишние эффекты */
+       
         * {
             border-radius: 0px !important;
         }
@@ -238,7 +238,7 @@
                 </div>
                 
                 <div id="quiz-observation" style="background:#333333; padding:15px; margin-bottom:20px; font-style:italic; min-height:50px; color:#ffffff;">
-                    Ожидание ваших действий...
+                    Ожидание  действий...
                 </div>
                 
                 <div style="border-top:1px solid #555555; padding-top:20px;">
@@ -309,7 +309,7 @@
     }
     function closeSolubility() { document.getElementById('sol-modal').style.display = 'none'; }
 
-    // --- БАЗА ДАННЫХ SOLVER  ---
+    // --- база на солвер  ---
     const db = {
         "Cl2->HCl": "Cl<sub>2</sub> + H<sub>2</sub> &rarr; 2HCl (свет)",
         "HCl->NaCl": "HCl + NaOH &rarr; NaCl + H<sub>2</sub>O",
@@ -349,7 +349,7 @@
         document.getElementById('solver-result').innerHTML = foundAny ? res : "Цепочка не распознана. Попробуйте использовать стандартные формулы (напр. Cl2, HCl).";
     }
 
-    // --- ЛАБОРАТОРИЯ ---
+    // --- лаба логика ---
     let curAnion = '';
     function setBase(color, anion, name) {
         resetLab('lab');
@@ -402,7 +402,7 @@
         document.getElementById('lab-status').innerText = 'Готов к работе';
     }
 
-    // --- ТРЕНАЖЕР  ---
+    // --- тренажер  ---
     const quizTasks = [
         {
             text: "В пробирке находится бесцветный раствор неизвестной соли. Вы знаете, что это галогенид. Проведите тесты и определите соль.",
