@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chem-How | Ultra Lab & Training</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #333333; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; }
+        .container { display: flex; min-height: 100vh; }
+
+        /* Сайдбар */
+        .sidebar {
+            width: 280px; background: #444444;
+            color: #ffffff; padding: 20px 0; position: fixed; height: 100vh;
+            left: 0; top: 0; transform: translateX(-100%); transition: transform 0s;
+            z-index: 1000;
+        }
+        .sidebar.active { transform: translateX(0); }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px; border-bottom: 1px solid #555555; }
+        .nav-menu { list-style: none; padding: 20px 0; }
+        .nav-item { padding: 15px 25px; cursor: pointer; background: transparent; }
+        .nav-item a { color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 15px; }
+
+        /* Контент */
+        .main-content { flex: 1; padding: 30px; margin-left: 0; }
+        .top-bar { background: #444444; padding: 15px 25px; margin-bottom: 30px; display: flex; align-items: center; }
+        .menu-toggle { background: #555555; color: #ffffff; border: none; padding: 10px 20px; cursor: pointer; }
+
+        .content-section { display: none; background: #444444; padding: 40px; }
+        .content-section.active { display: block; }
+
+        /* Сетка плиток */
+        .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .nav-box { background: #555555; padding: 30px 20px; text-align: center; cursor: pointer; }
+        .nav-box i { font-size: 3rem; color: #ffffff; margin-bottom: 20px; }
+        
+        .fact-card { background: #3a3a3a; padding: 25px; margin-top: 30px; }
+
+        /* Квантовые ячейки */
+        .quantum-box { display: flex; gap: 20px; margin: 15px 0; }
+        .cell { width: 36px; height: 36px; border: 2px solid #ffffff; display: inline-flex; align-items: center; justify-content: center; position: relative; background: #ffffff; color: #000000; margin-right: 5px; font-weight: bold; }
+        .spin-up { color: #ff4444; opacity: 0; }
+        .spin-down { color: #4444ff; opacity: 0; }
+        .visible { opacity: 1; }
+
+        /* Элементы таблицы */
+        .halogen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+        .element-card { background: #555555; border: 2px solid #ffffff; padding: 20px; text-align: center; cursor: pointer; }
+        .element-card .symbol { font-size: 2.2rem; font-weight: 800; color: #ffffff; }
+
+        /* Лаборатория */
+        .lab-layout { display: grid; grid-template-columns: 1fr 450px; gap: 30px; }
+        .shelf { background: #3a3a3a; padding: 20px; height: fit-content; }
+        .shelf-title { font-size: 0.65rem; color: #cccccc; text-transform: uppercase; margin: 10px 0 5px; border-bottom: 1px solid #555555; padding-bottom: 2px; }
+        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .lab-btn { background: #555555; color: #ffffff; border: none; padding: 6px 2px; cursor: pointer; font-size: 0.7rem; }
+
+        .work-bench { background: #3a3a3a; border: 2px solid #ffffff; display: flex; flex-direction: column; align-items: center; padding: 30px; min-height: 600px; position: relative; }
+        .test-tube { width: 85px; height: 240px; border: 2px solid #ffffff; border-top: none; position: relative; overflow: hidden; background: rgba(255,255,255,0.1); }
+        .liquid { position: absolute; bottom: 0; width: 100%; height: 0%; z-index: 1; }
+        .precipitate { position: absolute; bottom: 0; width: 100%; height: 0%; opacity: 0; z-index: 2; }
+
+        .equation-box { margin-top: 20px; width: 100%; background: #333333; padding: 15px; display: none; }
+        .eq-line { margin-bottom: 8px; font-family: 'Consolas', monospace; font-size: 0.8rem; border-bottom: 1px solid #555555; padding-bottom: 3px; }
+        .eq-label { color: #cccccc; font-size: 0.6rem; text-transform: uppercase; font-weight: bold; display: block; }
+
+        /* Solver */
+        .solver-input { width: 100%; padding: 15px; background: #333333; border: 2px solid #ffffff; color: #ffffff; font-family: monospace; margin-bottom: 15px; outline: none; }
+
+        /* Модалка таблицы растворимости */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); }
+        .modal-content { background: #444444; margin: 5% auto; padding: 20px; width: 90%; max-width: 850px; }
+        .sol-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center; color: #ffffff; }
+        .sol-table th, .sol-table td { border: 1px solid #555555; padding: 5px; }
+        .sol-table th { background: #555555; }
+        .res-r { background: #3a3a3a; }
+        .res-n { background: #662222; font-weight: bold; }
+
+        @keyframes rise { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-180px); opacity: 0; } }
+        .bubble { position: absolute; background: rgba(255,255,255,0.4); border-radius: 50%; animation: rise 1.5s infinite linear; }
+        
+        /* Убираем все скругления и лишние эффекты */
+        * {
+            border-radius: 0px !important;
+        }
+        .nav-box:hover, .element-card:hover, .lab-btn:hover, .menu-toggle:hover, button:hover {
+            transform: none;
+            background: #555555;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: none;
+        }
+        .fact-card, .equation-box, .top-bar, .content-section, .shelf, .work-bench, .modal-content {
+            box-shadow: none;
+            border-left: none;
+            border-right: none;
+        }
+        h1, h2, h3, h4, p, span, a, button, div, label {
+            color: #ffffff;
+        }
+        #current-view-title {
+            color: #ffffff;
+        }
+        .top-bar button {
+            background: #555555;
+            color: #ffffff;
+        }
+        #lab-status {
+            color: #ffffff;
+        }
+        .fact-card h4 i, .fact-card p i {
+            color: #ffffff;
+        }
+        .solver-input::placeholder {
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo"><i class="fas fa-flask"></i><span>Chem-How</span></div>
+            <button id="closeMenu" style="background:none; border:none; color:#ffffff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="showSection('home-section')"><a><i class="fas fa-home"></i><span>Главная</span></a></li>
+            <li class="nav-item" onclick="showSection('table-section')"><a><i class="fas fa-table"></i><span>Галогены</span></a></li>
+            <li class="nav-item" onclick="showSection('lab-section')"><a><i class="fas fa-vial"></i><span>Лаборатория</span></a></li>
+            <li class="nav-item" onclick="showSection('solver-section')"><a><i class="fas fa-project-diagram"></i><span>Solver</span></a></li>
+            <li class="nav-item" onclick="showSection('quiz-section')"><a><i class="fas fa-tasks"></i><span>Тренажер</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i> Меню</button>
+            <h2 style="margin-left: 20px; font-size: 1rem;"> CHEM HOW | <span id="current-view-title">ГЛАВНАЯ</span></h2>
+            <button onclick="openSolubility()" style="margin-left: auto; border:none; padding:8px 15px; cursor:pointer; font-weight:bold;"><i class="fas fa-th"></i> Таблица растворимости</button>
+        </div>
+
+        <div class="content-section active" id="home-section">
+            <div class="home-grid">
+                <div class="nav-box" onclick="showSection('table-section')"><i class="fas fa-table"></i><h3>Галогены</h3></div>
+                <div class="nav-box" onclick="showSection('lab-section')"><i class="fas fa-flask"></i><h3>Лаборатория</h3></div>
+                <div class="nav-box" onclick="showSection('solver-section')"><i class="fas fa-project-diagram"></i><h3>Solver</h3></div>
+                <div class="nav-box" onclick="showSection('quiz-section')"><i class="fas fa-tasks"></i><h3>Тренажер</h3></div>
+            </div>
+            <div class="fact-card">
+                <h4><i class="fas fa-lightbulb"></i> Интересный факт:</h4>
+                <p>Галогены — это единственная группа элементов, в которой при комнатной температуре встречаются вещества во всех трех агрегатных состояниях: газ (F, Cl), жидкость (Br) и твердое тело (I).</p>
+            </div>
+        </div>
+
+        <div class="content-section" id="table-section">
+            <h2>Свойства Галогенов</h2>
+            <div class="halogen-grid" style="margin-top: 20px;">
+                <div class="element-card" onclick="inspect('F', 'Фтор', '2s2 2p5', 'Газ, светло-жёлтый')">
+                    <span class="number">9</span><div class="symbol">F</div>Фтор
+                </div>
+                <div class="element-card" onclick="inspect('Cl', 'Хлор', '3s2 3p5', 'Газ, жёлто-зелёный')">
+                    <span class="number">17</span><div class="symbol">Cl</div>Хлор
+                </div>
+                <div class="element-card" onclick="inspect('Br', 'Бром', '4s2 4p5', 'Жидкость, красно-бурая')">
+                    <span class="number">35</span><div class="symbol">Br</div>Бром
+                </div>
+                <div class="element-card" onclick="inspect('I', 'Йод', '5s2 5p5', 'Твердый, темно-серый')">
+                    <span class="number">53</span><div class="symbol">I</div>Йод
+                </div>
+            </div>
+            <div id="infoPanel" class="info-panel" style="margin-top: 20px;">
+                <h3 id="eName"></h3>
+                <div class="quantum-box" id="quantum-container"></div>
+                <p id="ePhys"></p>
+                <p id="eLayer" style="margin-top:10px; font-size:0.8rem;"></p>
+            </div>
+        </div>
+
+        <div class="content-section" id="lab-section">
+            <div class="lab-layout">
+                <div class="shelf">
+                    <div class="shelf-title">1. Основа</div>
+                    <div class="btn-grid">
+                        <button class="lab-btn" onclick="setBase('rgba(255,255,255,0.3)', 'Cl', 'NaCl')">NaCl</button>
+                        <button class="lab-btn" onclick="setBase('rgba(255,255,0,0.3)', 'I', 'KI')">KI</button>
+                        <button class="lab-btn" onclick="setBase('rgba(0,0,255,0.3)', 'Cu', 'CuSO4')">CuSO4</button>
+                        <button class="lab-btn" onclick="setBase('rgba(255,165,0,0.3)', 'Fe3', 'FeCl3')">FeCl3</button>
+                        <button class="lab-btn" onclick="setBase('rgba(255,255,255,0.3)', 'CO3', 'Na2CO3')">Na2CO3</button>
+                        <button class="lab-btn" onclick="setBase('rgba(255,255,255,0.3)', 'SO4', 'Na2SO4')">Na2SO4</button>
+                    </div>
+                    <div class="shelf-title">2. Реактивы</div>
+                    <div class="btn-grid">
+                        <button class="lab-btn" onclick="addReagent('Ag', 'lab')">AgNO3</button>
+                        <button class="lab-btn" onclick="addReagent('NaOH', 'lab')">NaOH</button>
+                        <button class="lab-btn" onclick="addReagent('HCl', 'lab')">HCl</button>
+                        <button class="lab-btn" onclick="addReagent('Ba', 'lab')">BaCl2</button>
+                        <button class="lab-btn" onclick="addReagent('Pb', 'lab')">Pb(NO3)2</button>
+                        <button class="lab-btn" onclick="addReagent('SCN', 'lab')">KSCN</button>
+                    </div>
+                    <button onclick="resetLab('lab')" style="width:100%; margin-top:20px; padding:10px; background:#555555; border:none; font-weight:bold; cursor:pointer;">ОЧИСТИТЬ</button>
+                </div>
+                <div class="work-bench">
+                    <div class="test-tube">
+                        <div id="lab-liq" class="liquid"></div>
+                        <div id="lab-pre" class="precipitate"></div>
+                        <div id="lab-gas" style="position:absolute; bottom:0; width:100%; height:100%; display:none;"></div>
+                    </div>
+                    <p id="lab-status" style="margin-top:15px; font-weight:bold;">Готов к работе</p>
+                    <div id="lab-eq-box" class="equation-box">
+                        <div class="eq-line"><span class="eq-label">Молекулярное</span><span id="lab-mol"></span></div>
+                        <div class="eq-line"><span class="eq-label">Сокращенное ионное</span><span id="lab-siu"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="solver-section">
+            <h2>Solver: Решение цепочек</h2>
+            <p style="color: #cccccc; font-size: 0.8rem; margin-bottom: 10px;">Примеры: Cl2->HCl->NaCl->AgCl или KI->I2->MgI2</p>
+            <input type="text" id="chain-input" class="solver-input" placeholder="Cl2 -> HCl -> NaCl">
+            <button onclick="solveChain()" style="background:#555555; border:none; padding:10px 25px; cursor:pointer;">РЕШИТЬ</button>
+            <div id="solver-result" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="content-section" id="quiz-section">
+            <h2>Тренажер: Качественные реакции</h2>
+            <p style="color: #cccccc; margin-bottom: 20px;">Исследуйте неизвестное вещество в виртуальной пробирке, добавляя реактивы. Сделайте вывод на основе признаков реакций.</p>
+            
+            <div class="fact-card">
+                <h3 id="quiz-q" style="margin-bottom:15px;">Загрузка задания...</h3>
+                
+                <div style="margin-bottom:20px;">
+                    <p style="font-size:0.85rem; color:#cccccc; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Провести качественную реакцию:</p>
+                    <div class="btn-grid" id="quiz-reagents" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;"></div>
+                </div>
+                
+                <div id="quiz-observation" style="background:#333333; padding:15px; margin-bottom:20px; font-style:italic; min-height:50px; color:#ffffff;">
+                    Ожидание ваших действий...
+                </div>
+                
+                <div style="border-top:1px solid #555555; padding-top:20px;">
+                    <p style="font-size:0.85rem; color:#cccccc; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Сделать вывод (что в пробирке?):</p>
+                    <div class="btn-grid" id="quiz-options" style="grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px;"></div>
+                </div>
+            </div>
+            <div id="quiz-feedback" style="margin-top:20px; font-weight:bold; font-size:1.1rem; text-align: center;"></div>
+        </div>
+
+    </main>
+</div>
+
+<div id="sol-modal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeSolubility()" style="float:right; cursor:pointer; font-size:1.5rem;">&times;</span>
+        <h3 style="margin-bottom:15px;">Таблица растворимости</h3>
+        <table class="sol-table" id="sol-table-content"><table>
+    </div>
+</div>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('current-view-title').innerText = id.replace('-section', '').toUpperCase();
+    }
+
+    document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.add('active');
+    document.getElementById('closeMenu').onclick = () => document.getElementById('sidebar').classList.remove('active');
+
+    function renderQuantum(containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `
+            <div><div class="cell"><span class="spin-up">↑</span><span class="spin-down">↓</span></div><span style="font-size:0.7rem; display:block; text-align:center;">ns</span></div>
+            <div style="display:flex;"><div class="cell"><span class="spin-up">↑</span><span class="spin-down">↓</span></div><div class="cell"><span class="spin-up">↑</span><span class="spin-down">↓</span></div><div class="cell"><span class="spin-up">↑</span></div><span style="font-size:0.7rem; align-self:flex-end;">np</span></div>
+        `;
+        const arrows = container.querySelectorAll('.spin-up, .spin-down');
+        arrows.forEach((arr, i) => setTimeout(() => arr.classList.add('visible'), i * 150));
+    }
+
+    function inspect(s, n, l, p) {
+        document.getElementById('infoPanel').classList.add('active');
+        document.getElementById('eName').innerText = n + " (" + s + ")";
+        document.getElementById('ePhys').innerText = p;
+        document.getElementById('eLayer').innerText = "Конфигурация: " + l;
+        renderQuantum('quantum-container');
+    }
+
+    function openSolubility() {
+        const cations = ['H+', 'Li+', 'Na+', 'K+', 'Ag+', 'Mg2+', 'Ba2+', 'Cu2+', 'Fe3+'];
+        const anions = ['OH-', 'Cl-', 'Br-', 'I-', 'SO4 2-', 'CO3 2-'];
+        const table = document.getElementById('sol-table-content');
+        let html = `<tr><th>-</th>${anions.map(a => `<th>${a}</th>`).join('')}</tr>`;
+        cations.forEach(c => {
+            html += `<tr><td><strong>${c}</strong></td>`;
+            anions.forEach(a => {
+                let res = 'Р';
+                if ((c === 'Ag+' && (a === 'Cl-' || a === 'Br-' || a === 'I-')) || (c === 'Ba2+' && a === 'SO4 2-') || (c === 'Cu2+' && a === 'OH-')) res = 'Н';
+                html += `<td class="${res === 'Н' ? 'res-n' : 'res-r'}">${res}</td>`;
+            });
+            html += `</tr>`;
+        });
+        table.innerHTML = html;
+        document.getElementById('sol-modal').style.display = 'block';
+    }
+    function closeSolubility() { document.getElementById('sol-modal').style.display = 'none'; }
+
+    // --- БАЗА ДАННЫХ SOLVER  ---
+    const db = {
+        "Cl2->HCl": "Cl<sub>2</sub> + H<sub>2</sub> &rarr; 2HCl (свет)",
+        "HCl->NaCl": "HCl + NaOH &rarr; NaCl + H<sub>2</sub>O",
+        "NaCl->AgCl": "NaCl + AgNO<sub>3</sub> &rarr; AgCl&darr; + NaNO<sub>3</sub>",
+        "NaCl->Cl2": "2NaCl + 2H<sub>2</sub>O &rarr; 2NaOH + H<sub>2</sub>&uarr; + Cl<sub>2</sub>&uarr; (электролиз)",
+        "Cl2->CuCl2": "Cl<sub>2</sub> + Cu &rarr; CuCl<sub>2</sub>",
+        "Cl2->FeCl3": "3Cl<sub>2</sub> + 2Fe &rarr; 2FeCl<sub>3</sub>",
+        "HCl->Cl2": "4HCl + MnO<sub>2</sub> &rarr; MnCl<sub>2</sub> + Cl<sub>2</sub>&uarr; + 2H<sub>2</sub>O",
+        "NaCl->HCl": "NaCl<sub>(тв)</sub> + H<sub>2</sub>SO<sub>4(конц)</sub> &rarr; NaHSO<sub>4</sub> + HCl&uarr;",
+        "Br2->HBr": "Br<sub>2</sub> + H<sub>2</sub> &rarr; 2HBr (нагрев)",
+        "KI->I2": "2KI + Cl<sub>2</sub> &rarr; 2KCl + I<sub>2</sub> (вытеснение)",
+        "I2->KI": "I<sub>2</sub> + 2K &rarr; 2KI",
+        "I2->MgI2": "I<sub>2</sub> + Mg &rarr; MgI<sub>2</sub> (катализатор H<sub>2</sub>O)",
+        "KBr->AgBr": "KBr + AgNO<sub>3</sub> &rarr; AgBr&darr; (желтоватый) + KNO<sub>3</sub>",
+        "KI->AgI": "KI + AgNO<sub>3</sub> &rarr; AgI&darr; (желтый) + KNO<sub>3</sub>",
+        "CuSO4->Cu(OH)2": "CuSO4 + 2NaOH &rarr; Cu(OH)2&darr; + Na2SO4",
+        "Na2CO3->CO2": "Na2CO3 + 2HCl &rarr; 2NaCl + CO2&uarr; + H2O",
+        "Na2SO4->BaSO4": "Na2SO4 + BaCl2 &rarr; BaSO4&darr; + 2NaCl"
+    };
+
+    function solveChain() {
+        const input = document.getElementById('chain-input').value.trim();
+        if (!input) return;
+        const chain = input.replace(/\s+/g, '').split('->');
+        let res = "";
+        let foundAny = false;
+
+        for (let i = 0; i < chain.length - 1; i++) {
+            const key = chain[i] + "->" + chain[i+1];
+            if (db[key]) {
+                res += `<div class="fact-card" style="margin-top:10px;"><strong>Шаг ${i+1}:</strong> ${db[key]}</div>`;
+                foundAny = true;
+            } else {
+                res += `<div class="fact-card" style="margin-top:10px;"><strong>Шаг ${i+1}:</strong> Реакция ${chain[i]} &rarr; ${chain[i+1]} не найдена в базе.</div>`;
+            }
+        }
+        document.getElementById('solver-result').innerHTML = foundAny ? res : "Цепочка не распознана. Попробуйте использовать стандартные формулы (напр. Cl2, HCl).";
+    }
+
+    // --- ЛАБОРАТОРИЯ ---
+    let curAnion = '';
+    function setBase(color, anion, name) {
+        resetLab('lab');
+        document.getElementById('lab-liq').style.height = '60%';
+        document.getElementById('lab-liq').style.background = color;
+        curAnion = anion;
+        document.getElementById('lab-status').innerText = 'Раствор ' + name;
+    }
+
+    function addReagent(reagent, mode) {
+        if (!curAnion) return;
+        if (reagent === 'Ag' && curAnion === 'Cl') updateV('#ffffff', 'AgCl↓ Белый осадок', "AgNO3 + NaCl = AgCl↓ + NaNO3", "Ag+ + Cl- = AgCl↓");
+        if (reagent === 'NaOH' && curAnion === 'Cu') updateV('#00bfff', 'Cu(OH)2↓ Голубой осадок', "CuSO4 + 2NaOH = Cu(OH)2↓ + Na2SO4", "Cu2+ + 2OH- = Cu(OH)2↓");
+        if (reagent === 'HCl' && curAnion === 'CO3') {
+            document.getElementById('lab-gas').style.display = 'block'; createBubbles();
+            updateV('transparent', 'Выделение CO2↑', "Na2CO3 + 2HCl = 2NaCl + CO2↑ + H2O", "CO3 2- + 2H+ = CO2↑ + H2O");
+        }
+        if (reagent === 'Ba' && curAnion === 'SO4') updateV('#ffffff', 'BaSO4↓ Белый осадок', "Na2SO4 + BaCl2 = BaSO4↓ + 2NaCl", "Ba2+ + SO4 2- = BaSO4↓");
+        if (reagent === 'Pb' && curAnion === 'I') updateV('#ffff00', 'PbI2↓ Желтый осадок', "2KI + Pb(NO3)2 = PbI2↓ + 2KNO3", "Pb2+ + 2I- = PbI2↓");
+        if (reagent === 'SCN' && curAnion === 'Fe3') {
+            document.getElementById('lab-liq').style.background = '#ff4444'; 
+            updateV('transparent', 'Fe(SCN)3 Кроваво-красный раствор', "FeCl3 + 3KSCN = Fe(SCN)3 + 3KCl", "Fe3+ + 3SCN- = Fe(SCN)3");
+        }
+    }
+
+    function updateV(c, t, mol, siu) {
+        const pr = document.getElementById('lab-pre');
+        if (c !== 'transparent') { pr.style.height = '25%'; pr.style.opacity = '1'; pr.style.background = c; }
+        document.getElementById('lab-status').innerText = t;
+        document.getElementById('lab-eq-box').style.display = 'block';
+        document.getElementById('lab-mol').innerHTML = mol;
+        document.getElementById('lab-siu').innerHTML = siu;
+    }
+
+    function createBubbles() {
+        const box = document.getElementById('lab-gas'); box.innerHTML = '';
+        for (let i = 0; i < 15; i++) {
+            let b = document.createElement('div'); b.className = 'bubble';
+            b.style.left = Math.random() * 70 + 'px'; b.style.animationDelay = Math.random() + 's';
+            box.appendChild(b);
+        }
+    }
+
+    function resetLab(m) {
+        document.getElementById('lab-liq').style.height = '0';
+        document.getElementById('lab-pre').style.opacity = '0';
+        document.getElementById('lab-gas').style.display = 'none';
+        document.getElementById('lab-eq-box').style.display = 'none';
+        curAnion = '';
+        document.getElementById('lab-status').innerText = 'Готов к работе';
+    }
+
+    // --- ТРЕНАЖЕР  ---
+    const quizTasks = [
+        {
+            text: "В пробирке находится бесцветный раствор неизвестной соли. Вы знаете, что это галогенид. Проведите тесты и определите соль.",
+            answer: "NaCl",
+            options: ["NaCl", "KI", "Na2SO4", "FeCl3"],
+            reactions: { "AgNO3": "Выпал белый творожистый осадок.", "BaCl2": "Видимых изменений нет.", "Pb(NO3)2": "Выпал белый осадок." }
+        },
+        {
+            text: "Раствор имеет желтоватый оттенок. При добавлении специфического реагента раствор мгновенно окрашивается в интенсивный кроваво-красный цвет.",
+            answer: "FeCl3",
+            options: ["CuSO4", "FeCl3", "KI", "Na2CO3"],
+            reactions: { "NaOH": "Выпал бурый осадок.", "KSCN": "Раствор стал кроваво-красным.", "AgNO3": "Выпал белый осадок." }
+        }
+    ];
+
+    let currentQuizIndex = 0;
+    function loadQuiz() {
+        const task = quizTasks[currentQuizIndex];
+        document.getElementById('quiz-q').innerText = `Задача ${currentQuizIndex + 1}: ${task.text}`;
+        document.getElementById('quiz-observation').innerText = "Ожидание ваших действий...";
+        document.getElementById('quiz-feedback').innerText = "";
+        const reagentsBox = document.getElementById('quiz-reagents');
+        reagentsBox.innerHTML = '';
+        for(let r in task.reactions) {
+            let btn = document.createElement('button'); btn.className = 'lab-btn'; btn.style.padding = "8px"; btn.innerText = "+ " + r;
+            btn.onclick = () => { document.getElementById('quiz-observation').innerHTML = `<strong>Наблюдение (${r}):</strong> ${task.reactions[r]}`; };
+            reagentsBox.appendChild(btn);
+        }
+        const optionsBox = document.getElementById('quiz-options');
+        optionsBox.innerHTML = '';
+        task.options.forEach(opt => {
+            let btn = document.createElement('button'); btn.className = 'lab-btn'; btn.style.padding = "8px"; btn.innerText = opt;
+            btn.onclick = () => checkQuiz(opt);
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function checkQuiz(ans) {
+        const task = quizTasks[currentQuizIndex];
+        const feedback = document.getElementById('quiz-feedback');
+        if(ans === task.answer) {
+            feedback.style.color = '#00cc44';
+            feedback.innerHTML = `<i class="fas fa-check-circle"></i> Верно!`;
+            setTimeout(() => { currentQuizIndex = (currentQuizIndex + 1) % quizTasks.length; loadQuiz(); }, 2000);
+        } else {
+            feedback.style.color = '#ff6666';
+            feedback.innerHTML = `<i class="fas fa-times-circle"></i> Ошибка.`;
+        }
+    }
+
+    window.onload = () => { loadQuiz(); };
+</script>
+</body>
+</html>
